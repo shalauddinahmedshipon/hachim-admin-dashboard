@@ -53,7 +53,7 @@ const Sidebar = () => {
       <div className="flex justify-between items-center">
         <h2 className="font-bold text-lg">
           {isOpen ? (
-            "Dashboard"
+            "Lustless"
           ) : (
             <TbLayoutDashboardFilled className="w-7 h-7" />
           )}

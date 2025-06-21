@@ -1,27 +1,17 @@
-// src/routes/privateRoute.tsx
-import type { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore";
+import { Navigate } from 'react-router-dom';
+import React from 'react';
+import { useAuthStore } from '@/store/useAuthStore';
 
-interface PrivateRouteProps {
-  children: ReactNode;
-  allowedRoles?: string[];
-}
+type Props = {
+  children: React.ReactNode;
+};
 
-const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
-  const user = useAuthStore((state) => state.user);
+export default function ProtectedRoute({ children }: Props) {
+  const { accessToken, user } = useAuthStore();
 
-  if (!user) {
-    // Not logged in
+  if (!accessToken || user?.role !== 'ADMIN') {
     return <Navigate to="/" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    // Role not allowed
-    return <Navigate to="/unauthorized" replace />;
-  }
-
-  return children;
-};
-
-export default PrivateRoute;
+  return <>{children}</>;
+}

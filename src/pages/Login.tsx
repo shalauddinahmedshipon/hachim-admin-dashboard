@@ -1,64 +1,80 @@
-// src/pages/Login.tsx
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore";
-import { FaRegEye } from "react-icons/fa";
-import { FaRegEyeSlash } from "react-icons/fa";
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { useAuthStore } from '@/store/useAuthStore';
 
-const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+const loginSchema = z.object({
+  email: z.string().email({ message: 'Invalid email address' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+});
 
-  const { login } = useAuthStore();
+type LoginFormData = z.infer<typeof loginSchema>;
+
+export default function LoginPage() {
   const navigate = useNavigate();
+  const { login, loading, error, accessToken, user } = useAuthStore();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    login({ username, role: "user" });
-    navigate("/dashboard");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  useEffect(() => {
+    if (accessToken && user?.role === 'ADMIN') {
+      navigate('/dashboard');
+    }
+  }, [accessToken, user, navigate]);
+
+  const onSubmit = async (data: LoginFormData) => {
+    const success = await login(data.email, data.password);
+    if (success) {
+      navigate('/dashboard');
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary text-white">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded space-y-4 w-[400px] py-12 shadow-2xl"
-      >
-        <h2 className="text-xl text-primary font-bold text-center">Login</h2>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full px-4 py-2 rounded bg-gray-200 text-black focus:outline-none"
-          required
-        />
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 rounded bg-gray-200 text-black focus:outline-none"
-            required
-          />
-          <span
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute top-2.5 right-3 cursor-pointer text-gray-600"
-          >
-            {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
-          </span>
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-primary hover:bg-primary/80 py-2 rounded"
-        >
-          Login
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
+      <div className="w-full max-w-md p-8 border rounded-xl shadow-xl bg-card">
+        <h2 className="text-2xl font-semibold mb-6 text-center">Admin Login</h2>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              {...register('email')}
+              className="mt-2"
+            />
+            {errors.email && <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>}
+          </div>
+
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              {...register('password')}
+              className="mt-2"
+            />
+            {errors.password && <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>}
+          </div>
+
+          {error && <p className="text-sm text-red-500">{error}</p>}
+
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
+      </div>
     </div>
   );
-};
-
-export default Login;
+}
