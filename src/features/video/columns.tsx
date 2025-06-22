@@ -1,31 +1,29 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Edit, Archive, ArrowUpDown } from 'lucide-react';
-import type { Quote } from '@/store/quoteStore';
+import type { Video } from '@/store/videoStore';
 
 export const columns = (
-  onEdit: (quote: Quote) => void,
+  onEdit: (video: Video) => void,
   onDelete: (id: string) => void,
-  onView: (quote: Quote) => void
-): ColumnDef<Quote>[] => [
+  onView: (video: Video) => void
+): ColumnDef<Video>[] => [
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: 'title',
+    header: 'Title',
   },
   {
-    accessorKey: 'quote',
-    header: 'Quote',
-  },
-  {
-    accessorKey: 'imageUrl',
-    header: 'Image',
+    accessorKey: 'videoUrl',
+    header: 'Video',
     cell: ({ row }) => {
-      const url = row.original.imageUrl;
+      const url = row.original.videoUrl;
       return url ? (
-        <img
+        <video
           src={url}
-          alt="Quote"
-          className="h-12 w-12 object-cover rounded"
+          className="h-24 w-24 object-cover rounded"
+          muted
+          controls={false}
+          preload="metadata"
         />
       ) : (
         '—'
@@ -59,23 +57,23 @@ export const columns = (
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => {
-      const quote = row.original;
+      const video = row.original;
       return (
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => onView(quote)}>
+          <Button variant="outline" onClick={() => onView(video)}>
             View
           </Button>
           <Button
             className="bg-orange-300"
             variant="outline"
-            onClick={() => onEdit(quote)}
+            onClick={() => onEdit(video)}
           >
             <Edit className="w-4 h-4" />
           </Button>
           <Button
             className="bg-red-100 hover:bg-red-300"
             variant="outline"
-            onClick={() => onDelete(quote.id)}
+            onClick={() => onDelete(video.id)}
           >
             <Archive className="text-red-500 w-4 h-4" />
           </Button>

@@ -31,9 +31,7 @@ const menuItems = [
   { to: "/articles", icon: <MdArticle className="w-5 h-5" />, text: "Articles" },
   { to: "/quotes", icon: <FaQuoteLeft className="w-5 h-5" />, text: "Quotes" },
   { to: "/videos", icon: <MdVideoLibrary className="w-5 h-5" />, text: "Videos" },
-  { to: "/analytics", icon: <IoBarChartSharp className="w-5 h-5" />, text: "Analytics" },
   { to: "/settings", icon: <IoMdSettings className="w-5 h-5" />, text: "Settings" },
-  { to: "/about", icon: <IoMdSettings className="w-5 h-5" />, text: "About" },
 ];
 
 

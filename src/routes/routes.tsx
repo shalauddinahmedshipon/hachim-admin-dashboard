@@ -8,7 +8,8 @@ import Login from "@/pages/Login";
 import ProtectedRoute from "./privateRoute";
 import Articles from "@/pages/Articles";
 import Quotes from "@/pages/Quotes";
-import { Videos } from "@/pages/Videos";
+import Videos from "@/pages/Videos";
+
 
 
 const AppRoutes = () => {
