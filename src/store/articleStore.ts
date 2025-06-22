@@ -31,7 +31,7 @@ export const useArticleStore = create<ArticleState>((set, get) => ({
     try {
       const res = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/article`);
       const data = await res.json();
-      set({ articles: data, loading: false });
+      set({ articles: data.data, loading: false });
     } catch (err: any) {
       set({ error: err.message, loading: false });
     }

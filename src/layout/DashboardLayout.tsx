@@ -15,7 +15,7 @@ const DashboardLayout = () => {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 ">
-        <header className="bg-gray-200 dark:bg-primary-dark border-b p-4 flex justify-between items-center">
+        <header className="bg-violet-500 dark:bg-primary-dark border-b p-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
       
           </div>
@@ -42,7 +42,7 @@ const DashboardLayout = () => {
   <AvatarFallback>CN</AvatarFallback>
 </Avatar> 
               </div>
-              <Button onClick={logout}>
+              <Button className="bg-pink-500" onClick={logout}>
                 <MdOutlineLogout />
                 Logout
               </Button>

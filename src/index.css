@@ -165,3 +165,34 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+@layer utilities {
+  .bg-background {
+    background-color: var(--background);
+  }
+
+  .text-foreground {
+    color: var(--foreground);
+  }
+
+  .border-border {
+    border-color: var(--border);
+  }
+
+  .bg-muted {
+    background-color: var(--muted);
+  }
+
+  .text-muted-foreground {
+    color: var(--muted-foreground);
+  }
+
+  .outline-ring {
+    outline-color: var(--ring);
+  }
+
+  .outline-ring\/50 {
+    outline-color: color-mix(in oklch, var(--ring) 50%, transparent);
+  }
+}

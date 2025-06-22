@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 
 const schema = z.object({
   title: z.string().min(1),
@@ -27,9 +28,10 @@ export const ArticleForm = ({
   const handleSubmit = form.handleSubmit(onSubmit);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-h-[500px] overflow-y-scroll">
       <Input {...form.register('title')} placeholder="Title" />
-      <Input {...form.register('description')} placeholder="Description" />
+<Textarea {...form.register('description')} placeholder="Description"   className="min-h-[260px]" />
+
       <DialogFooter>
         <Button type="submit">Submit</Button>
       </DialogFooter>
