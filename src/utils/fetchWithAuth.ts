@@ -6,18 +6,20 @@ export const fetchWithAuth = async (input: RequestInfo, init: RequestInit = {}) 
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  const authInit = {
+  const isFormData = init.body instanceof FormData;
+
+  const authInit: RequestInit = {
     ...init,
     headers: {
       ...(init.headers || {}),
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
+      // ✅ Set Content-Type only if not using FormData
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
     },
   };
 
   let response = await fetch(input, authInit);
 
-  // If unauthorized, try refreshing the access token
   if (response.status === 401 && refreshToken) {
     try {
       const refreshResponse = await fetch(`${apiUrl}/auth/refresh-token`, {
@@ -38,13 +40,12 @@ export const fetchWithAuth = async (input: RequestInfo, init: RequestInit = {}) 
 
       setTokens(newAccessToken, newRefreshToken);
 
-      // Retry original request with new token
-      const retryInit = {
+      const retryInit: RequestInit = {
         ...init,
         headers: {
           ...(init.headers || {}),
           Authorization: `Bearer ${newAccessToken}`,
-          "Content-Type": "application/json",
+          ...(isFormData ? {} : { "Content-Type": "application/json" }),
         },
       };
 
