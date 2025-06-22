@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { IoHome } from "react-icons/io5";
 import { IoBarChartSharp } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
-import { FaLongArrowAltLeft } from "react-icons/fa";
+import { FaLongArrowAltLeft, FaQuoteLeft } from "react-icons/fa";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
@@ -15,6 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { MdArticle, MdVideoLibrary } from "react-icons/md";
 
 const Sidebar = () => {
   const isOpen = useSidebarStore((state) => state.isOpen);
@@ -25,20 +26,16 @@ const Sidebar = () => {
     closed: { width: "4rem" },
   };
 
-  const menuItems = [
-    { to: "/dashboard", icon: <IoHome className="w-5 h-5" />, text: "Home" },
-    {
-      to: "/analytics",
-      icon: <IoBarChartSharp className="w-5 h-5" />,
-      text: "Analytics",
-    },
-    {
-      to: "/settings",
-      icon: <IoMdSettings className="w-5 h-5" />,
-      text: "Settings",
-    },
-    { to: "/about", icon: <IoMdSettings className="w-5 h-5" />, text: "About" },
-  ];
+const menuItems = [
+  { to: "/dashboard", icon: <IoHome className="w-5 h-5" />, text: "Home" },
+  { to: "/articles", icon: <MdArticle className="w-5 h-5" />, text: "Articles" },
+  { to: "/quotes", icon: <FaQuoteLeft className="w-5 h-5" />, text: "Quotes" },
+  { to: "/videos", icon: <MdVideoLibrary className="w-5 h-5" />, text: "Videos" },
+  { to: "/analytics", icon: <IoBarChartSharp className="w-5 h-5" />, text: "Analytics" },
+  { to: "/settings", icon: <IoMdSettings className="w-5 h-5" />, text: "Settings" },
+  { to: "/about", icon: <IoMdSettings className="w-5 h-5" />, text: "About" },
+];
+
 
   return (
     <motion.aside

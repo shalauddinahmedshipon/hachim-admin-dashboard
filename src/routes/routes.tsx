@@ -6,6 +6,9 @@ import Analytics from "@/pages/Analytics";
 import Setting from "@/pages/Setting";
 import Login from "@/pages/Login";
 import ProtectedRoute from "./privateRoute";
+import Articles from "@/pages/Articles";
+import Quotes from "@/pages/Quotes";
+import { Videos } from "@/pages/Videos";
 
 
 const AppRoutes = () => {
@@ -23,6 +26,10 @@ const AppRoutes = () => {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/settings" element={<Setting />} />
         <Route path="/about" element={<About />} />
+
+         <Route path="/articles" element={<Articles />} />
+        <Route path="/quotes" element={<Quotes />} />
+        <Route path="/videos" element={<Videos />} />
       </Route>
     </Routes>
   );

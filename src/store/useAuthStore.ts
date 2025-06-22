@@ -18,6 +18,8 @@ type AuthState = {
   error: string | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  setTokens: (access: string, refresh: string) => void;
+  refreshAccessToken: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -67,7 +69,38 @@ export const useAuthStore = create<AuthState>()(
           return false;
         }
       },
+setTokens: (access, refresh) => {
+  const decoded = jwtDecode<JwtPayload>(access);
+  set({ accessToken: access, refreshToken: refresh, user: decoded });
+},
 
+refreshAccessToken: async () => {
+  const { refreshToken, logout } = useAuthStore.getState();
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  if (!refreshToken) return;
+
+  try {
+    const res = await fetch(`${apiUrl}/auth/refresh-token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    const result = await res.json();
+
+    if (!res.ok || !result.success) {
+      logout();
+      throw new Error("Failed to refresh access token");
+    }
+
+    const { access_token, refresh_token } = result.data;
+    useAuthStore.getState().setTokens(access_token, refresh_token);
+  } catch (err) {
+    logout();
+    throw err;
+  }
+},
       logout: () => {
         set({ accessToken: null, refreshToken: null, user: null });
       },
