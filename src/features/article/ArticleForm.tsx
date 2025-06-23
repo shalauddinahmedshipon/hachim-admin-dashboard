@@ -28,7 +28,7 @@ export const ArticleForm = ({
   const handleSubmit = form.handleSubmit(onSubmit);
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-h-[500px] overflow-y-scroll">
+    <form onSubmit={handleSubmit} className="space-y-4 max-h-[500px] overflow-y-auto">
       <Input {...form.register('title')} placeholder="Title" />
 <Textarea {...form.register('description')} placeholder="Description"   className="min-h-[260px]" />
 

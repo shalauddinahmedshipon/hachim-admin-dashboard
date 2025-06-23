@@ -2,12 +2,12 @@ import { useSidebarStore } from "@/store/useSidebarStore";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { IoHome } from "react-icons/io5";
-import { IoBarChartSharp } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
 import { FaLongArrowAltLeft, FaQuoteLeft } from "react-icons/fa";
 import { FaLongArrowAltRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
+import { useLocation } from "react-router-dom";
 
 import {
   Tooltip,
@@ -16,10 +16,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MdArticle, MdVideoLibrary } from "react-icons/md";
+import { Users } from "lucide-react";
 
 const Sidebar = () => {
   const isOpen = useSidebarStore((state) => state.isOpen);
   const toggle = useSidebarStore((state) => state.toggle);
+  const location = useLocation();
 
   const sidebarVariants = {
     open: { width: "16rem" },
@@ -27,11 +29,12 @@ const Sidebar = () => {
   };
 
 const menuItems = [
-  { to: "/dashboard", icon: <IoHome className="w-5 h-5" />, text: "Home" },
+  { to: "/dashboard", icon:<IoHome className="w-5 h-5" />, text: "Home" },
+  { to: "/users", icon: <Users className="w-5 h-5" /> , text: "Users" },
   { to: "/articles", icon: <MdArticle className="w-5 h-5" />, text: "Articles" },
   { to: "/quotes", icon: <FaQuoteLeft className="w-5 h-5" />, text: "Quotes" },
   { to: "/videos", icon: <MdVideoLibrary className="w-5 h-5" />, text: "Videos" },
-  { to: "/settings", icon: <IoMdSettings className="w-5 h-5" />, text: "Settings" },
+  { to: "/change-password", icon: <IoMdSettings className="w-5 h-5" />, text: "Password Settings" },
 ];
 
 
@@ -84,7 +87,12 @@ const menuItems = [
                 ) : (
                   <Link
                     to={item.to}
-                    className="flex items-center justify-start p-2 rounded-lg hover:bg-white hover:text-black dark:hover:bg-primary transition-colors"
+                   className={`flex items-center justify-start p-2 rounded-lg transition-colors
+  ${location.pathname === item.to
+    ? "bg-white text-black dark:bg-primary"
+    : "hover:bg-white hover:text-black dark:hover:bg-primary"}
+`}
+
                   >
                     {item.icon}
                     <span className="ml-2 font-medium">{item.text}</span>

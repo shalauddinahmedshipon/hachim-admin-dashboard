@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { jwtDecode } from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
+import { toast } from 'sonner';
 
 type JwtPayload = {
   sub: string;
@@ -20,6 +21,7 @@ type AuthState = {
   logout: () => void;
   setTokens: (access: string, refresh: string) => void;
   refreshAccessToken: () => Promise<void>;
+  changePassword: (oldPassword: string, newPassword: string, confirmPassword: string) => Promise<boolean>;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -35,8 +37,8 @@ export const useAuthStore = create<AuthState>()(
         set({ loading: true, error: null });
 
         try {
-           const apiUrl = import.meta.env.VITE_API_URL;
-           const res = await fetch(`${apiUrl}/auth/login`, {
+          const apiUrl = import.meta.env.VITE_API_URL;
+          const res = await fetch(`${apiUrl}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -69,41 +71,90 @@ export const useAuthStore = create<AuthState>()(
           return false;
         }
       },
-setTokens: (access, refresh) => {
-  const decoded = jwtDecode<JwtPayload>(access);
-  set({ accessToken: access, refreshToken: refresh, user: decoded });
-},
 
-refreshAccessToken: async () => {
-  const { refreshToken, logout } = useAuthStore.getState();
-  const apiUrl = import.meta.env.VITE_API_URL;
+      setTokens: (access, refresh) => {
+        const decoded = jwtDecode<JwtPayload>(access);
+        set({ accessToken: access, refreshToken: refresh, user: decoded });
+      },
 
-  if (!refreshToken) return;
+      refreshAccessToken: async () => {
+        const { refreshToken, logout } = useAuthStore.getState();
+        const apiUrl = import.meta.env.VITE_API_URL;
+
+        if (!refreshToken) return;
+
+        try {
+          const res = await fetch(`${apiUrl}/auth/refresh-token`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refreshToken }),
+          });
+
+          const result = await res.json();
+
+          if (!res.ok || !result.success) {
+            logout();
+            throw new Error("Failed to refresh access token");
+          }
+
+          const { access_token, refresh_token } = result.data;
+          useAuthStore.getState().setTokens(access_token, refresh_token);
+        } catch (err) {
+          logout();
+          throw err;
+        }
+      },
+
+      logout: () => {
+        set({ accessToken: null, refreshToken: null, user: null });
+      },
+
+      // New changePassword function
+   changePassword: async (oldPassword, newPassword, confirmPassword) => {
+  set({ loading: true, error: null });
+
+  if (newPassword !== confirmPassword) {
+    set({ loading: false, error: 'New password and confirm password do not match.' });
+    toast.error('New password and confirmation do not match.');
+    return false;
+  }
 
   try {
-    const res = await fetch(`${apiUrl}/auth/refresh-token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const res = await fetch(`${apiUrl}/auth/change-password`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${useAuthStore.getState().accessToken}`,
+      },
+      body: JSON.stringify({ oldPassword, newPassword,confirmPassword }),
     });
 
     const result = await res.json();
 
     if (!res.ok || !result.success) {
-      logout();
-      throw new Error("Failed to refresh access token");
+      const errorMessage = result.message || 'Password change failed';
+      set({ loading: false, error: errorMessage });
+      toast.error(errorMessage);
+      return false;
     }
 
-    const { access_token, refresh_token } = result.data;
-    useAuthStore.getState().setTokens(access_token, refresh_token);
+    set({ loading: false, error: null });
+    toast.success('Password changed successfully. Logging out...');
+
+    // ⏳ Delay logout to allow toast to display
+    setTimeout(() => {
+      useAuthStore.getState().logout();
+    }, 1500); // 1.5 seconds delay
+
+    return true;
   } catch (err) {
-    logout();
-    throw err;
+    set({ loading: false, error: 'Something went wrong' });
+    toast.error('Something went wrong');
+    return false;
   }
 },
-      logout: () => {
-        set({ accessToken: null, refreshToken: null, user: null });
-      },
+
     }),
     {
       name: 'auth-storage',
