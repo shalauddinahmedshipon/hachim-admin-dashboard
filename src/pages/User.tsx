@@ -18,16 +18,25 @@ export default function User() {
   const { users, fetchUsers, createAdmin } = useUserStore();
   const [openCreate, setOpenCreate] = useState(false);
   const [roleFilter, setRoleFilter] = useState("all");
+  const [subscriptionFilter, setSubscriptionFilter] = useState("all");
+
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
   // 👇 Filter users BEFORE passing to DataTable
-  const filteredUsers = useMemo(() => {
-    if (roleFilter === "all") return users;
-    return users.filter(user => user.role === roleFilter);
-  }, [users, roleFilter]);
+const filteredUsers = useMemo(() => {
+  return users.filter(user => {
+    const roleMatch = roleFilter === "all" || user.role === roleFilter;
+    const subscriptionMatch =
+      subscriptionFilter === "all" ||
+      (subscriptionFilter === "active" && user.hasActiveSubscription) ||
+      (subscriptionFilter === "inactive" && !user.hasActiveSubscription);
+    return roleMatch && subscriptionMatch;
+  });
+}, [users, roleFilter, subscriptionFilter]);
+
 
   return (
     <div className="p-4">
@@ -61,19 +70,31 @@ export default function User() {
         </Dialog>
       </div>
 
-      {/* 🔽 Role Filter Dropdown */}
-      <div className="mb-4">
-        <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Filter by Role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="ADMIN">Admin</SelectItem>
-            <SelectItem value="USER">User</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+     <div className="flex gap-4 mb-4">
+  {/* Role Filter */}
+  <Select value={roleFilter} onValueChange={setRoleFilter}>
+    <SelectTrigger className="w-[150px]">
+      <SelectValue placeholder="Filter by Role" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">All</SelectItem>
+      <SelectItem value="ADMIN">Admin</SelectItem>
+      <SelectItem value="USER">User</SelectItem>
+    </SelectContent>
+  </Select>
+
+  {/* Subscription Filter */}
+  <Select value={subscriptionFilter} onValueChange={setSubscriptionFilter}>
+    <SelectTrigger className="w-[180px]">
+      <SelectValue placeholder="Subscription Status" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="all">All</SelectItem>
+      <SelectItem value="active">Active</SelectItem>
+      <SelectItem value="inactive">Inactive</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
 
       {/* 👇 Only send filtered users */}
       <DataTable

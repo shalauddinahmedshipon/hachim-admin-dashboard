@@ -10,6 +10,7 @@ import Quotes from "@/pages/Quotes";
 import Videos from "@/pages/Videos";
 import ChangePassword from "@/pages/ChangePassword";
 import User from "@/pages/User";
+import Subscription from "@/pages/Subscription";
 
 
 
@@ -32,6 +33,7 @@ const AppRoutes = () => {
         <Route path="/quotes" element={<Quotes />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/users" element={<User />} />
+        <Route path="/subscription" element={<Subscription />} />
       </Route>
     </Routes>
   );

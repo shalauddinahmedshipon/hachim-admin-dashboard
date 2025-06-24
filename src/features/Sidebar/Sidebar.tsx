@@ -16,7 +16,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MdArticle, MdVideoLibrary } from "react-icons/md";
-import { Users } from "lucide-react";
+import { FolderIcon, Users } from "lucide-react";
 
 const Sidebar = () => {
   const isOpen = useSidebarStore((state) => state.isOpen);
@@ -31,6 +31,7 @@ const Sidebar = () => {
 const menuItems = [
   { to: "/dashboard", icon:<IoHome className="w-5 h-5" />, text: "Home" },
   { to: "/users", icon: <Users className="w-5 h-5" /> , text: "Users" },
+  { to: "/subscription", icon: <FolderIcon className="w-5 h-5" /> , text: "Subscriptions" },
   { to: "/articles", icon: <MdArticle className="w-5 h-5" />, text: "Articles" },
   { to: "/quotes", icon: <FaQuoteLeft className="w-5 h-5" />, text: "Quotes" },
   { to: "/videos", icon: <MdVideoLibrary className="w-5 h-5" />, text: "Videos" },
