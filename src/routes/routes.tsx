@@ -11,6 +11,7 @@ import Videos from "@/pages/Videos";
 import ChangePassword from "@/pages/ChangePassword";
 import User from "@/pages/User";
 import Subscription from "@/pages/Subscription";
+import Payment from "@/pages/Payment";
 
 
 
@@ -34,6 +35,7 @@ const AppRoutes = () => {
         <Route path="/videos" element={<Videos />} />
         <Route path="/users" element={<User />} />
         <Route path="/subscription" element={<Subscription />} />
+        <Route path="/payments" element={<Payment />} />
       </Route>
     </Routes>
   );
