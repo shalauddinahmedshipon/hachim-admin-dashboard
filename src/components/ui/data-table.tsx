@@ -53,7 +53,8 @@ const [pagination, setPagination] = useState({
   });
 
   return (
-    <div>
+  <div className='overflow-x-auto'>
+      <div>
   {filterColumnKey && (
   <div className="flex items-center py-4">
     <Input
@@ -68,8 +69,8 @@ const [pagination, setPagination] = useState({
     />
   </div>
 )}
-      <div className="rounded-md border">
-      <table className="w-full border-collapse table-auto">
+      <div  className="w-full overflow-x-auto rounded-md border">
+      <table className="min-w-full border-collapse">
         <thead className="bg-gray-100">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -140,5 +141,6 @@ const [pagination, setPagination] = useState({
          
       </div>
     </div>
+  </div>
   );
 }

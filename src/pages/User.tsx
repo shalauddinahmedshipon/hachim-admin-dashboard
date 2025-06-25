@@ -97,11 +97,14 @@ const filteredUsers = useMemo(() => {
 </div>
 
       {/* 👇 Only send filtered users */}
-      <DataTable
+      
+ <DataTable
         columns={columns()}
         data={filteredUsers}
         filterColumnKey="email"
       />
+  
+     
     </div>
   );
 }

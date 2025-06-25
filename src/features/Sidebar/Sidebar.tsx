@@ -1,111 +1,54 @@
-import { useSidebarStore } from "@/store/useSidebarStore";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { IoHome } from "react-icons/io5";
-import { IoMdSettings } from "react-icons/io";
-import { FaLongArrowAltLeft, FaQuoteLeft } from "react-icons/fa";
-import { FaLongArrowAltRight } from "react-icons/fa";
-import { motion } from "framer-motion";
-import { TbLayoutDashboardFilled } from "react-icons/tb";
-import { useLocation } from "react-router-dom";
-
+import { Link, useLocation } from "react-router-dom";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { MdArticle, MdPayment, MdVideoLibrary } from "react-icons/md";
-import { FolderIcon, Users } from "lucide-react";
-
-const Sidebar = () => {
-  const isOpen = useSidebarStore((state) => state.isOpen);
-  const toggle = useSidebarStore((state) => state.toggle);
-  const location = useLocation();
-
-  const sidebarVariants = {
-    open: { width: "16rem" },
-    closed: { width: "4rem" },
-  };
+  IoHome,
+} from "react-icons/io5";
+import {
+  MdArticle,
+  MdPayment,
+  MdVideoLibrary,
+} from "react-icons/md";
+import { FaQuoteLeft } from "react-icons/fa";
+import { FolderIcon, Settings, Users } from "lucide-react";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
 
 const menuItems = [
-  { to: "/dashboard", icon:<IoHome className="w-5 h-5" />, text: "Home" },
-  { to: "/users", icon: <Users className="w-5 h-5" /> , text: "Users" },
-  { to: "/subscription", icon: <FolderIcon className="w-5 h-5" /> , text: "Subscriptions" },
-  { to: "/payments", icon: <MdPayment className="w-5 h-5" /> , text: "Payments" },
+  { to: "/dashboard", icon: <IoHome className="w-5 h-5" />, text: "Home" },
+  { to: "/users", icon: <Users className="w-5 h-5" />, text: "Users" },
+  { to: "/subscription", icon: <FolderIcon className="w-5 h-5" />, text: "Subscriptions" },
+  { to: "/payments", icon: <MdPayment className="w-5 h-5" />, text: "Payments" },
   { to: "/articles", icon: <MdArticle className="w-5 h-5" />, text: "Articles" },
   { to: "/quotes", icon: <FaQuoteLeft className="w-5 h-5" />, text: "Quotes" },
   { to: "/videos", icon: <MdVideoLibrary className="w-5 h-5" />, text: "Videos" },
-  { to: "/change-password", icon: <IoMdSettings className="w-5 h-5" />, text: "Password Settings" },
+  { to: "/change-password", icon: <Settings className="w-5 h-5" />, text: "Password Settings" },
 ];
 
+const Sidebar = () => {
+  const location = useLocation();
 
   return (
-    <motion.aside
-      initial={isOpen ? "open" : "closed"}
-      animate={isOpen ? "open" : "closed"}
-      variants={sidebarVariants}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className={`bg-primary text-white dark:bg-primary-dark border-r min-h-screen p-4 overflow-hidden flex flex-col ${
-        !isOpen ? "px-10 items-center" : ""
-      }`}
-    >
-      <div className="flex justify-between items-center">
-        <h2 className="font-bold text-lg">
-          {isOpen ? (
-            "Lustless"
-          ) : (
-            <TbLayoutDashboardFilled className="w-7 h-7" />
-          )}
-        </h2>
-        <Button className="ms-1" variant="ghost" size="sm" onClick={toggle}>
-          {isOpen ? <FaLongArrowAltLeft /> : <FaLongArrowAltRight />}
-        </Button>
-      </div>
-
-      <nav className="flex-1 mt-12">
-        <TooltipProvider delayDuration={100}>
-          <ul className="space-y-4">
-            {menuItems.map((item) => (
-              <motion.li
-                key={item.to}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+    <aside className="h-full bg-primary dark:bg-primary-dark text-white p-4 border-r">
+      <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+        <TbLayoutDashboardFilled className="w-6 h-6" />
+        Lustless
+      </h2>
+      <nav>
+        <ul className="space-y-2">
+          {menuItems.map((item) => (
+            <li key={item.to}>
+              <Link
+                to={item.to}
+                className={`flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-white hover:text-black dark:hover:bg-primary ${
+                  location.pathname === item.to ? "bg-white text-black" : ""
+                }`}
               >
-                {!isOpen ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link
-                        to={item.to}
-                        className="w-10 h-10 flex items-center justify-center p-2 rounded-lg hover:bg-white hover:text-black dark:hover:bg-primary transition-colors"
-                      >
-                        {item.icon}
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="ml-2">
-                      {item.text}
-                    </TooltipContent>
-                  </Tooltip>
-                ) : (
-                  <Link
-                    to={item.to}
-                   className={`flex items-center justify-start p-2 rounded-lg transition-colors
-  ${location.pathname === item.to
-    ? "bg-white text-black dark:bg-primary"
-    : "hover:bg-white hover:text-black dark:hover:bg-primary"}
-`}
-
-                  >
-                    {item.icon}
-                    <span className="ml-2 font-medium">{item.text}</span>
-                  </Link>
-                )}
-              </motion.li>
-            ))}
-          </ul>
-        </TooltipProvider>
+                {item.icon}
+                <span>{item.text}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </nav>
-    </motion.aside>
+    </aside>
   );
 };
 
