@@ -30,10 +30,7 @@ export const useThemeStore = create<ThemeStore>((set) => ({
 
   initializeTheme: () => {
     const savedTheme = localStorage.getItem("theme") as Theme | null;
-    const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-    const theme = savedTheme || preferred;
+     const theme = savedTheme || "light";
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(theme);
     set({ theme });
