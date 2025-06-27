@@ -6,6 +6,7 @@ import { useQuoteStore } from '@/store/quoteStore';
 import { useArticleStore } from '@/store/articleStore';
 import { usePaymentStore } from '@/store/paymentStore';
 import { useSubscriptionStore } from '@/store/subscriptionStore';
+import { useAnimationImageStore } from '@/store/animationImageStore';
 
 export const MainLoading = () => {
   const userLoading = useUserStore((s) => s.loading);
@@ -14,9 +15,10 @@ export const MainLoading = () => {
   const articleLoading = useArticleStore((s) => s.loading);
   const paymentLoading = usePaymentStore((s) => s.loading);
   const subscriptionLoading = useSubscriptionStore((s) => s.loading);
+  const animationLoading = useAnimationImageStore((s)=>s.loading)
 
 
-  const isLoading = userLoading || videoLoading || qouteLoading || articleLoading || paymentLoading|| subscriptionLoading;
+  const isLoading = userLoading || videoLoading || qouteLoading || articleLoading || paymentLoading|| subscriptionLoading || animationLoading;
 
   if (!isLoading) return null;
 
