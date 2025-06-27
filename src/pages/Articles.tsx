@@ -126,7 +126,7 @@ const handleDelete = (articleId: string) => {
             <DialogTitle>Article Details</DialogTitle>
           </DialogHeader>
           {viewArticle && (
-            <div className="space-y-2 max-h-[500px] overflow-y-scroll">
+            <div className="space-y-2 max-h-[500px] overflow-y-auto">
               <p className='font-semibold text-2xl'>
               {viewArticle.title}
               </p>

@@ -125,15 +125,17 @@ export default function Videos() {
             <DialogTitle>Video Details</DialogTitle>
           </DialogHeader>
           {viewVideo && (
-            <div className="space-y-2 max-h-[500px] overflow-y-scroll">
+            <div className="space-y-2 max-h-[500px] overflow-y-auto">
               <p className="font-semibold text-lg">{viewVideo.title}</p>
-              {viewVideo.videoUrl && (
+              <div className='flex justify-center item-center w-full'>
+                {viewVideo.videoUrl && (
                 <video
                   controls
                   src={viewVideo.videoUrl}
-                  className="rounded mt-2 max-w-full max-h-60"
+                  className="rounded my-2 max-w-full max-h-60"
                 />
               )}
+              </div>
             </div>
           )}
         </DialogContent>

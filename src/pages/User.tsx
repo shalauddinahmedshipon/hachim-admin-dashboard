@@ -27,7 +27,7 @@ export default function User() {
 
   // 👇 Filter users BEFORE passing to DataTable
 const filteredUsers = useMemo(() => {
-  return users.filter(user => {
+  const filtered = users.filter(user => {
     const roleMatch = roleFilter === "all" || user.role === roleFilter;
     const subscriptionMatch =
       subscriptionFilter === "all" ||
@@ -35,7 +35,11 @@ const filteredUsers = useMemo(() => {
       (subscriptionFilter === "inactive" && !user.hasActiveSubscription);
     return roleMatch && subscriptionMatch;
   });
+
+  // Sort descending by createdAt (newest first)
+  return filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }, [users, roleFilter, subscriptionFilter]);
+
 
 
   return (

@@ -24,6 +24,7 @@ export const columns = (
           muted
           controls={false}
           preload="metadata"
+            onClick={() => onView(row.original)}
         />
       ) : (
         '—'

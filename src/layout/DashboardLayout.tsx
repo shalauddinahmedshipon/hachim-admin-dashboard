@@ -8,6 +8,7 @@ import { MdOutlineLogout } from "react-icons/md";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { MainLoading } from "@/features/MainLoading";
 
 const DashboardLayout = () => {
   const { theme, toggleTheme } = useThemeStore();
@@ -56,6 +57,7 @@ const DashboardLayout = () => {
 
         {/* Page Content */}
         <main className="flex-1 overflow-y-auto p-4">
+            <MainLoading />
           <Outlet />
         </main>
       </div>

@@ -15,17 +15,31 @@ export const columns = (
   {
     accessorKey: 'quote',
     header: 'Quote',
+    cell: ({ row }) => {
+    
+      const quote = row.original
+      return  (
+        <div   onClick={() => onView(quote)}>
+{quote.quote}
+        </div>
+        
+        
+       
+     
+      )}
   },
   {
     accessorKey: 'imageUrl',
     header: 'Image',
     cell: ({ row }) => {
       const url = row.original.imageUrl;
+      const quote = row.original
       return url ? (
         <img
           src={url}
           alt="Quote"
           className="h-12 w-12 object-cover rounded"
+          onClick={() => onView(quote)}
         />
       ) : (
         '—'

@@ -33,44 +33,45 @@ export const useAuthStore = create<AuthState>()(
       loading: false,
       error: null,
 
-      login: async (email, password) => {
-        set({ loading: true, error: null });
+    login: async (email, password) => {
+  set({ loading: true, error: null });
 
-        try {
-          const apiUrl = import.meta.env.VITE_API_URL;
-          const res = await fetch(`${apiUrl}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const res = await fetch(`${apiUrl}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-          const result = await res.json();
+    const result = await res.json();
 
-          if (!res.ok || !result.success) {
-            set({ loading: false, error: result.message || 'Login failed' });
-            return false;
-          }
+    if (!res.ok || !result.success) {
+      set({ loading: false, error: result.message || 'Login failed' });
+      return false;
+    }
 
-          const decoded = jwtDecode<JwtPayload>(result.data.access_token);
+    const decoded = jwtDecode<JwtPayload>(result.data.access_token);
 
-          if (decoded.role !== 'ADMIN') {
-            set({ loading: false, error: 'Access denied: Not an admin' });
-            return false;
-          }
+    if (decoded.role !== 'ADMIN' && decoded.role !== 'SUPER_ADMIN') {
+      set({ loading: false, error: 'Access denied: Not an admin or super admin' });
+      return false;
+    }
 
-          set({
-            accessToken: result.data.access_token,
-            refreshToken: result.data.refresh_token,
-            user: decoded,
-            loading: false,
-          });
+    set({
+      accessToken: result.data.access_token,
+      refreshToken: result.data.refresh_token,
+      user: decoded,
+      loading: false,
+    });
 
-          return true;
-        } catch (err) {
-          set({ loading: false, error: 'Something went wrong' });
-          return false;
-        }
-      },
+    return true;
+  } catch (err) {
+    set({ loading: false, error: 'Something went wrong' });
+    return false;
+  }
+},
+
 
       setTokens: (access, refresh) => {
         const decoded = jwtDecode<JwtPayload>(access);

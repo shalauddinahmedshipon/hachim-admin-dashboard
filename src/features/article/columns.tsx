@@ -18,8 +18,9 @@ export const columns = (
     header: 'Description',
      cell: ({ row }) => {
       const article:string = row.getValue('description');
+         const view = row.original;
       return (
-        <p>
+        <p onClick={() => onView(view)}>
          {article.slice(0,300)}...
         </p>
       );

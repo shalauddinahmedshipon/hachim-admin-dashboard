@@ -12,8 +12,8 @@ export interface User {
   latestPaymentDate: string | null;
   paymentDurationDays: number | null;
   totalPayments: number;
+  isBlocked: boolean; // 🆕 Add this if your backend returns it
 }
-
 
 type UserState = {
   users: User[];
@@ -21,6 +21,7 @@ type UserState = {
   error: string | null;
   fetchUsers: () => Promise<void>;
   createAdmin: (email: string, password: string) => Promise<void>;
+  toggleBlockUser: (userId: string, isBlocked: boolean) => Promise<void>; // 🆕
 };
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -59,5 +60,30 @@ export const useUserStore = create<UserState>((set, get) => ({
     } finally {
       set({ loading: false });
     }
-  }
+  },
+
+  toggleBlockUser: async (userId, isBlocked) => {
+    set({ loading: true, error: null });
+    try {
+      const res = await fetchWithAuth(
+        `${import.meta.env.VITE_API_URL}/user/block/${userId}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify({ isBlocked }),
+        }
+      );
+
+      if (!res.ok) {
+        const result = await res.json();
+        throw new Error(result.message || 'Failed to update block status');
+      }
+
+      await get().fetchUsers(); // Refresh users
+    } catch (err: any) {
+      set({ error: err.message });
+      throw err;
+    } finally {
+      set({ loading: false });
+    }
+  },
 }));

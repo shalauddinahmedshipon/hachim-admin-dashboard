@@ -125,16 +125,19 @@ export default function QuotePage() {
             <DialogTitle>Quote Details</DialogTitle>
           </DialogHeader>
           {viewQuote && (
-            <div className="space-y-2 max-h-[500px] overflow-y-scroll">
+            <div className="space-y-2 max-h-[500px] overflow-y-auto">
               <p className="font-semibold text-lg">{viewQuote.name}</p>
               <p className="text-sm">{viewQuote.quote}</p>
-              {viewQuote.imageUrl && (
+                            <div className='flex justify-center item-center w-full'>
+   {viewQuote.imageUrl && (
                 <img
                   src={viewQuote.imageUrl}
                   alt="quote"
                   className="rounded mt-2 max-h-60"
                 />
               )}
+                            </div>
+           
             </div>
           )}
         </DialogContent>

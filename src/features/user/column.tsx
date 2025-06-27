@@ -1,6 +1,10 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import type { User } from '@/store/userStore';
+import { useUserStore, type User } from '@/store/userStore';
 import { ArrowUpDown } from 'lucide-react';
+import { toast } from 'sonner';
+import { Switch } from '@/components/ui/switch';
+import { useAuthStore } from '@/store/useAuthStore';
+import { useState } from 'react';
 
 export const columns = (): ColumnDef<User>[] => [
   {
@@ -52,6 +56,50 @@ export const columns = (): ColumnDef<User>[] => [
       return <span>{row.getValue('totalPayments')}</span>;
     },
   },
+  {
+  id: 'blockedToggle',
+  header: 'Blocked',
+  cell: ({ row }) => {
+    const user = row.original;
+    const isBlocked = user.isBlocked ?? false;
+    const { toggleBlockUser } = useUserStore();
+    const currentUserRole = useAuthStore((state) => state.user?.role);
+    const [checked, setChecked] = useState(isBlocked);
+
+    const isTargetSuperAdmin = user.role === 'SUPER_ADMIN';
+
+    const handleToggle = async () => {
+      if (isTargetSuperAdmin) {
+        toast.error("Cannot block/unblock a SUPER_ADMIN");
+        return;
+      }
+
+      try {
+        // Optimistic update
+        setChecked(!checked);
+        await toggleBlockUser(user.id, !checked);
+        toast.success(`User ${!checked ? 'blocked' : 'unblocked'} successfully.`);
+      } catch (error: any) {
+        setChecked(checked); // revert toggle on error
+        toast.error(error.message || 'Failed to update block status');
+      }
+    };
+
+    // Only ADMIN and SUPER_ADMIN can toggle, others see text only
+    if (currentUserRole !== 'ADMIN' && currentUserRole !== 'SUPER_ADMIN') {
+      return <span>{checked ? 'Blocked' : 'Active'}</span>;
+    }
+
+    return (
+      <Switch
+        checked={checked}
+        disabled={isTargetSuperAdmin}
+        onCheckedChange={handleToggle}
+        aria-label={`Toggle block for user ${user.email}`}
+      />
+    );
+  },
+},
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
