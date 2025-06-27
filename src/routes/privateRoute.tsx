@@ -8,10 +8,9 @@ type Props = {
 
 export default function ProtectedRoute({ children }: Props) {
   const { accessToken, user } = useAuthStore();
-
-  if (!accessToken || user?.role !== 'ADMIN') {
-    return <Navigate to="/" replace />;
-  }
+if (!accessToken || !user || !['ADMIN', 'SUPER_ADMIN'].includes(user.role)) {
+  return <Navigate to="/" replace />;
+}
 
   return <>{children}</>;
 }

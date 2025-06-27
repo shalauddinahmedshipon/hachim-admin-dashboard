@@ -52,6 +52,8 @@ export const useAuthStore = create<AuthState>()(
     }
 
     const decoded = jwtDecode<JwtPayload>(result.data.access_token);
+console.log(decoded)
+console.log("Login result:", result);
 
     if (decoded.role !== 'ADMIN' && decoded.role !== 'SUPER_ADMIN') {
       set({ loading: false, error: 'Access denied: Not an admin or super admin' });

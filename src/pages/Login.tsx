@@ -27,11 +27,12 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  useEffect(() => {
-    if (accessToken && user?.role === 'ADMIN') {
-      navigate('/dashboard');
-    }
-  }, [accessToken, user, navigate]);
+useEffect(() => {
+  if (accessToken && (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN')) {
+    navigate('/dashboard');
+  }
+}, [accessToken, user, navigate]);
+
 
   const onSubmit = async (data: LoginFormData) => {
     const success = await login(data.email, data.password);

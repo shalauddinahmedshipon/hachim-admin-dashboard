@@ -13,12 +13,14 @@ import { columns } from '@/features/user/column';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function User() {
   const { users, fetchUsers, createAdmin } = useUserStore();
   const [openCreate, setOpenCreate] = useState(false);
   const [roleFilter, setRoleFilter] = useState("all");
   const [subscriptionFilter, setSubscriptionFilter] = useState("all");
+  const {user} = useAuthStore()
 
 
   useEffect(() => {
@@ -51,9 +53,13 @@ const filteredUsers = useMemo(() => {
 
         <Dialog open={openCreate} onOpenChange={setOpenCreate}>
           <DialogTrigger asChild>
-            <Button className="bg-green-500 hover:bg-gray-300">
+            {
+              user?.role==="SUPER_ADMIN"&&
+               <Button className="bg-green-500 hover:bg-gray-300">
               <PlusCircle /> Create Admin
             </Button>
+            }
+           
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
