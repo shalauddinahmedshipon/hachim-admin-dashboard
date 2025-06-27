@@ -8,7 +8,7 @@ import {
   MdVideoLibrary,
 } from "react-icons/md";
 import { FaQuoteLeft } from "react-icons/fa";
-import { FolderIcon, Settings, Users } from "lucide-react";
+import { FolderIcon, Image, Settings, Users } from "lucide-react";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 
 const menuItems = [
@@ -19,7 +19,9 @@ const menuItems = [
   { to: "/articles", icon: <MdArticle className="w-5 h-5" />, text: "Articles" },
   { to: "/quotes", icon: <FaQuoteLeft className="w-5 h-5" />, text: "Quotes" },
   { to: "/videos", icon: <MdVideoLibrary className="w-5 h-5" />, text: "Videos" },
+    { to: "/animation-image", icon: <Image className="w-5 h-5" />, text: "Animation Images" },
   { to: "/change-password", icon: <Settings className="w-5 h-5" />, text: "Password Settings" },
+
 ];
 
 const Sidebar = () => {

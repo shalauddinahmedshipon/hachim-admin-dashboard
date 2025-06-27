@@ -12,6 +12,7 @@ import ChangePassword from "@/pages/ChangePassword";
 import User from "@/pages/User";
 import Subscription from "@/pages/Subscription";
 import Payment from "@/pages/Payment";
+import AnimationImagePage from "@/pages/AnimationImage";
 
 
 
@@ -36,6 +37,7 @@ const AppRoutes = () => {
         <Route path="/users" element={<User />} />
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/payments" element={<Payment />} />
+        <Route path="/animation-image" element={<AnimationImagePage />} />
       </Route>
     </Routes>
   );
